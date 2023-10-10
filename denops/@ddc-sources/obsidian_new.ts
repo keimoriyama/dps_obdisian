@@ -33,9 +33,63 @@ export class Source extends BaseSource<Params> {
     completeStr: string;
   }): Promise<Item[]> {
     let items: Item[] = [];
+    const base_dir: string = await expand(
+      args.denops,
+      await globals.get(args.denops, "base_dir"),
+    );
+    const file_in_vault = await get_file_in_vault(base_dir);
+    let filename = await gen_filename();
+    while (!check(file_in_vault, filename)) {
+      filename = await gen_filename();
+    }
+    // カーソルの下で[[]]に囲まれているの文字列を取得
+    console.log(args);
+    items.push({ word: filename });
     return items;
   }
   override params(): Params {
     return {};
   }
+}
+
+async function check(
+  files_in_vault: string[],
+  filename: string,
+): Promise<boolean> {
+  for (const file in files_in_vault) {
+    if (file.includes(filename)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+async function gen_filename(): Promise<string> {
+  const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  let filename = "";
+  while (filename.length < 4) {
+    const n = Math.floor(Math.random() * 100);
+    if (n < 26) {
+      filename += alpha[n];
+    }
+  }
+  filename += "_" + String(Math.floor(Math.random() * 10000));
+  console.log(filename);
+  return filename;
+}
+
+async function get_file_in_vault(
+  base_dir: string,
+): Promise<string[]> {
+  let files = [];
+  for await (
+    const entry of walk(base_dir, {
+      includeDirs: false,
+      includeFiles: true,
+      exts: [".md"],
+    })
+  ) {
+    files.push(entry.path);
+  }
+  return files;
 }

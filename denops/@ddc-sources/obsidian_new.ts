@@ -18,6 +18,7 @@ import {
   winbufnr,
   writefile,
 } from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
+import { get_base_dir } from "../obsidian/utils.ts";
 type Params = Record<never, never>;
 
 type ObsidianNotes = {
@@ -36,10 +37,7 @@ export class Source extends BaseSource<Params> {
   }): Promise<DdcGatherItems<ObsidianNotes>> {
     const items: Item<ObsidianNotes>[] = [];
     const target: string = args.context.input;
-    const base_dir: string = await expand(
-      args.denops,
-      await globals.get(args.denops, "base_dir"),
-    );
+    const base_dir: string = await get_base_dir(args.denops);
     const file_in_vault = await get_file_in_vault(base_dir);
     let filename = await gen_filename();
     while (!check(file_in_vault, filename)) {
@@ -79,7 +77,6 @@ export class Source extends BaseSource<Params> {
       /\[\[(.*?)\]\]/g,
       replace_str,
     ).replace("[[", "");
-    console.log(replacedString);
     // setlineが使える
     await denops.call("setline", line, replacedString);
     return;

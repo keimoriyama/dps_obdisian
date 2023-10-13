@@ -10,17 +10,12 @@ import {
   walk,
   WalkEntry,
 } from "./deps.ts";
-
+import { get_base_dir } from "./utils.ts";
 export async function main(denops: Denops): Promise<void> {
   denops.dispatcher = {
     async follow_link() {
       const result = await eval_link(denops);
-      console.log(result);
       if (result["result"]) {
-        const baseDir: string = await expand(
-          denops,
-          await globals.get(denops, "base_dir"),
-        );
         // ファイル名の確定
         const file_ailias: string = result["text"];
         let filename: string = "";
@@ -45,10 +40,7 @@ export async function main(denops: Denops): Promise<void> {
 }
 
 async function search_file(denops, filename): Promise<WalkEntry[]> {
-  const baseDir: string = await expand(
-    denops,
-    await globals.get(denops, "base_dir"),
-  );
+  const baseDir: string = await get_base_dir(denops);
   let file_paths: string[] = [];
   for await (
     const files of walk(baseDir, { includeDirs: false, match: [filename] })

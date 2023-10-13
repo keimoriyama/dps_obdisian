@@ -12,6 +12,7 @@ import { Denops } from "https://deno.land/x/ddc_vim@v3.4.0/deps.ts";
 import { expand, globals } from "./deps.ts";
 import { walk } from "https://deno.land/std@0.92.0/fs/mod.ts";
 import { readfile } from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
+import { get_base_dir } from "../obsidian/utils.ts";
 type Params = Record<never, never>;
 
 export class Source extends BaseSource<Params> {
@@ -23,10 +24,7 @@ export class Source extends BaseSource<Params> {
     completeStr: string;
   }): Promise<Item[]> {
     let items: Item[] = [];
-    const base_dir: string = await expand(
-      args.denops,
-      await globals.get(args.denops, "base_dir"),
-    );
+    const base_dir: string = await get_base_dir(args.denops);
     // あるNoteのファイル名とタグを取得する
     for await (
       const entry of walk(base_dir, {

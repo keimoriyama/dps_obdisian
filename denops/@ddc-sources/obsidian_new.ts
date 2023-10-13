@@ -74,13 +74,14 @@ export class Source extends BaseSource<Params> {
     const line = context.lineNr;
     const bufnr = await winbufnr(denops, 0);
     const line_under_cursor = await getbufline(denops, bufnr, line);
-    console.log(line_under_cursor);
-    const replacedString = line_under_cursor[0].replace(
+    const target = line_under_cursor[0];
+    const replacedString = "[[" + target.replace(
       /\[\[(.*?)\]\]/g,
       replace_str,
-    );
+    ).replace("[[", "");
     console.log(replacedString);
     // setlineが使える
+    await denops.call("setline", line, replacedString);
     return;
   }
 }

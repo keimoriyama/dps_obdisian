@@ -28,7 +28,7 @@ export async function main(denops: Denops): Promise<void> {
   };
   await execute(
     denops,
-    `command! ObsidianVimToday call denops#request('${denops.name}', 'create_today', [])`,
+    `command! DpsObsidianToday call denops#request('${denops.name}', 'create_today', [])`,
   );
 }
 

@@ -35,7 +35,7 @@ export async function main(denops: Denops): Promise<void> {
   };
   await execute(
     denops,
-    `command! ObsidianVimFollowLink call denops#request('${denops.name}', 'follow_link', [])`,
+    `command! DpsObsidianFollowLink call denops#request('${denops.name}', 'follow_link', [])`,
   );
 }
 

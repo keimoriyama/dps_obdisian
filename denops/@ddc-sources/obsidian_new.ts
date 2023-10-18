@@ -92,6 +92,7 @@ async function note_template(
   filename: string,
 ): Promise<string[]> {
   const id = filename.replace(".md", "");
+  alias = alias.replace("\[\[", "").replace("\]\]", "");
   return [
     "---",
     `id: \"${id}\"`,

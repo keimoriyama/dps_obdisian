@@ -10,15 +10,16 @@ import {
   UserData,
 } from "https://deno.land/x/ddc_vim@v3.4.0/types.ts";
 import { Denops } from "https://deno.land/x/ddc_vim@v3.4.0/deps.ts";
-import { expand, globals } from "./deps.ts";
 import { walk } from "https://deno.land/std@0.92.0/fs/mod.ts";
-import { type OnCompleteDoneArguments } from "https://deno.land/x/ddc_vim@v4.0.5/base/source.ts";
 import {
   getbufline,
   winbufnr,
   writefile,
 } from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
 import { get_base_dir } from "../obsidian/utils.ts";
+
+import { type OnCompleteDoneArguments } from "https://deno.land/x/ddc_vim@v4.0.5/base/source.ts";
+
 type Params = Record<never, never>;
 
 type ObsidianNotes = {
@@ -37,13 +38,13 @@ export class Source extends BaseSource<Params> {
   }): Promise<DdcGatherItems<ObsidianNotes>> {
     const items: Item<ObsidianNotes>[] = [];
     const target: string = args.context.input;
+    console.log(target);
     const base_dir: string = await get_base_dir(args.denops);
     const file_in_vault = await get_file_in_vault(base_dir);
     let filename = await gen_filename();
     while (!check(file_in_vault, filename)) {
       filename = await gen_filename();
     }
-
     items.push({
       word: target,
       user_data: { id: target, filename: filename, noteDir: base_dir },
@@ -73,11 +74,14 @@ export class Source extends BaseSource<Params> {
     const bufnr = await winbufnr(denops, 0);
     const line_under_cursor = await getbufline(denops, bufnr, line);
     const target = line_under_cursor[0];
-    const replacedString = "[[" + target.replace(
+    let replacedString = "[[" + target.replace(
       /\[\[(.*?)\]\]/g,
       replace_str,
     ).replace("[[", "");
-    // setlineが使える
+    if (replacedString.indexOf("]]") == -1) {
+      replacedString += "]]";
+    }
+    console.log(replacedString);
     await denops.call("setline", line, replacedString);
     return;
   }

@@ -1,6 +1,7 @@
 import {
   Denops,
   execute,
+  exists,
   format,
   globals,
   join,
@@ -21,6 +22,9 @@ export async function main(denops: Denops): Promise<void> {
       const filename: string = await gen_date_str();
       const path2file: string = join(baseDir, filename);
       const res: OpenResult = await open(denops, path2file);
+      if (!await exists(path2file)) {
+        return;
+      }
       const bufnr: number = res["bufnr"];
       const template: string[] = await get_template(filename, "daily_note");
       await setbufline(denops, bufnr, 1, template);

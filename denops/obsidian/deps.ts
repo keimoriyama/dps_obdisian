@@ -12,7 +12,7 @@ export {
   getline,
   setbufline,
 } from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
-export { walk } from "https://deno.land/std@0.92.0/fs/mod.ts";
+export { exists, walk } from "https://deno.land/std@0.92.0/fs/mod.ts";
 export type { WalkEntry } from "https://deno.land/std@0.92.0/fs/mod.ts";
 export {
   expand,
@@ -20,3 +20,8 @@ export {
   glob,
   globpath,
 } from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
+
+export {
+  isNull,
+  isString,
+} from "https://deno.land/x/unknownutil@v3.10.0/mod.ts";

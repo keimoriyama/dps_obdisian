@@ -7,7 +7,7 @@ import {
 import { Denops } from "https://deno.land/x/ddc_vim@v3.4.0/deps.ts";
 import { walk } from "https://deno.land/std@0.92.0/fs/mod.ts";
 import { readfile } from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
-import { getBaseDir, getDailyNoteDir } from "../obsidian/utils.ts";
+import { getBaseDir, getDailyNoteDir } from "../dps_obsidian/utils.ts";
 
 import {
   getbufline,

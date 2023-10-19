@@ -3,40 +3,38 @@ import {
   execute,
   exists,
   format,
-  globals,
   join,
   open,
   OpenResult,
   setbufline,
 } from "./deps.ts";
 
+import { getBaseDir, getDailyNoteDir } from "./utils.ts";
+
 export async function main(denops: Denops): Promise<void> {
   denops.dispatcher = {
-    async open_file(filename: unknown) {
-      const baseDir: string = await globals.get(denops, "base_dir");
-      const path2file: string = join(baseDir, filename);
-      open(denops, path2file);
-    },
-    async create_today() {
-      const baseDir: string = await globals.get(denops, "base_dir");
-      const filename: string = await gen_date_str();
-      const path2file: string = join(baseDir, filename);
+    async createToday(): Promise<void> {
+      const baseDir: string = await getBaseDir(denops);
+      const dailyNoteDir: string = await getDailyNoteDir(denops);
+      const filename: string = genDateStr();
+      const path2file: string = join(baseDir, dailyNoteDir, filename);
       const res: OpenResult = await open(denops, path2file);
       if (!await exists(path2file)) {
         return;
       }
       const bufnr: number = res["bufnr"];
-      const template: string[] = await get_template(filename, "daily_note");
+      const template: string[] = getTemplate(filename, "daily_note");
       await setbufline(denops, bufnr, 1, template);
+      return;
     },
   };
   await execute(
     denops,
-    `command! DpsObsidianToday call denops#request('${denops.name}', 'create_today', [])`,
+    `command! DpsObsidianToday call denops#request('${denops.name}', 'createToday', [])`,
   );
 }
 
-async function get_template(id: string, tag: string): Promise<string[]> {
+function getTemplate(id: string, tag: string): string[] {
   const monthNames = [
     "January",
     "February",
@@ -51,7 +49,7 @@ async function get_template(id: string, tag: string): Promise<string[]> {
     "November",
     "December",
   ];
-  const d = await get_date();
+  const d = getDate();
   const month = monthNames[d.getMonth() - 1];
   const date_alias = `- ${month} ${d.getDate()}, ${d.getFullYear()}`;
   return [
@@ -65,13 +63,13 @@ async function get_template(id: string, tag: string): Promise<string[]> {
   ];
 }
 
-async function get_date(): Promise<Date> {
+function getDate(): Date {
   const d = new Date();
   return d;
 }
 
-async function gen_date_str(): Promise<string> {
-  const d = await get_date();
+function genDateStr(): string {
+  const d = getDate();
   const filename = format(d, "yyyy-MM-dd") + ".md";
   return filename;
 }

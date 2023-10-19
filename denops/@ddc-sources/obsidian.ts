@@ -7,7 +7,7 @@ import {
 import { Denops } from "https://deno.land/x/ddc_vim@v3.4.0/deps.ts";
 import { walk } from "https://deno.land/std@0.92.0/fs/mod.ts";
 import { readfile } from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
-import { get_base_dir } from "../obsidian/utils.ts";
+import { getBaseDir, getDailyNoteDir } from "../obsidian/utils.ts";
 
 import {
   getbufline,
@@ -44,21 +44,26 @@ export class Source extends BaseSource<Params> {
   async createNewNote(args: any): Promise<ObsidianNotes> {
     const items: Item<ObsidianNotes>[] = [];
     const target: string = args.context.input;
-    const base_dir: string = await get_base_dir(args.denops);
-    const file_in_vault = await get_file_in_vault(base_dir);
-    let filename = await gen_filename();
+    const base_dir: string = await getBaseDir(args.denops);
+    const file_in_vault = await getFileInVault(base_dir);
+    const daily_note_dir = await getDailyNoteDir(args.denops);
+    let filename = genFilename();
     while (!check(file_in_vault, filename)) {
-      filename = await gen_filename();
+      filename = genFilename();
     }
     items.push({
       word: target,
-      user_data: { id: target, filename: filename, noteDir: base_dir },
+      user_data: {
+        id: target,
+        filename: filename,
+        noteDir: base_dir + "/" + daily_note_dir,
+      },
     });
     return { items: items, isIncomplete: true };
   }
   async getCompletionFiles(denops: Denops): Promise<Item[]> {
     let items: Item[] = [];
-    const base_dir: string = await get_base_dir(denops);
+    const base_dir: string = await getBaseDir(denops);
     // あるNoteのファイル名とタグを取得する
     for await (
       const entry of walk(base_dir, {
@@ -94,7 +99,7 @@ export class Source extends BaseSource<Params> {
       sourceParams,
     }: OnCompleteDoneArguments<Params, UserData>,
   ): Promise<void> {
-    const content = await note_template(userData.id, userData.filename);
+    const content = noteTemplate(userData.id, userData.filename);
     await writefile(
       denops,
       content,
@@ -113,12 +118,11 @@ export class Source extends BaseSource<Params> {
     if (replacedString.indexOf("]]") == -1) {
       replacedString += "]]";
     }
-    console.log(replacedString);
     await denops.call("setline", line, replacedString);
     return;
   }
 }
-function note_template(
+function noteTemplate(
   alias: string,
   filename: string,
 ): string[] {
@@ -135,10 +139,10 @@ function note_template(
   ];
 }
 
-async function check(
+function check(
   files_in_vault: string[],
   filename: string,
-): Promise<boolean> {
+): boolean {
   for (const file in files_in_vault) {
     if (file.includes(filename)) {
       return false;
@@ -147,7 +151,7 @@ async function check(
   return true;
 }
 
-async function gen_filename(): Promise<string> {
+function genFilename(): string {
   const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   let filename = "";
   while (filename.length < 4) {
@@ -160,7 +164,7 @@ async function gen_filename(): Promise<string> {
   return filename;
 }
 
-async function get_file_in_vault(
+async function getFileInVault(
   base_dir: string,
 ): Promise<string[]> {
   let files = [];

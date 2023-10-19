@@ -9,35 +9,27 @@ import {
   WalkEntry,
 } from "./deps.ts";
 import { getBaseDir } from "./utils.ts";
-// export async function main(denops: Denops): Promise<void> {
-//   denops.dispatcher = {
-//     async follow_link() {
-//       const result = await eval_link(denops);
-//       if (result["result"]) {
-//         // ファイル名の確定
-//         const file_ailias: string = result["text"];
-//         let filename: string = "";
-//         if (file_ailias.indexOf("|") != -1) {
-//           filename = file_ailias.slice(0, file_ailias.indexOf("|")) + ".md";
-//         } else {
-//           filename = file_ailias + ".md";
-//         }
-//         console.log(filename);
-//         // 絶対パスで指定する
-//         let file_paths: WalkEntry[] = await search_file(denops, filename);
-//         if (file_paths.length == 1) {
-//           open(denops, file_paths[0].path);
-//         }
-//       }
-//     },
-//   };
-//   await execute(
-//     denops,
-//     `command! DpsObsidianFollowLink call denops#request('${denops.name}', 'follow_link', [])`,
-//   );
-// }
+export async function follow_link(denops: Denops) {
+  const result = await eval_link(denops);
+  if (result["result"]) {
+    // ファイル名の確定
+    const file_ailias: string = result["text"];
+    let filename: string = "";
+    if (file_ailias.indexOf("|") != -1) {
+      filename = file_ailias.slice(0, file_ailias.indexOf("|")) + ".md";
+    } else {
+      filename = file_ailias + ".md";
+    }
+    console.log(filename);
+    // 絶対パスで指定する
+    let file_paths: WalkEntry[] = await search_file(denops, filename);
+    if (file_paths.length == 1) {
+      open(denops, file_paths[0].path);
+    }
+  }
+}
 
-export async function search_file(denops, filename): Promise<WalkEntry[]> {
+async function search_file(denops, filename): Promise<WalkEntry[]> {
   const baseDir: string = await getBaseDir(denops);
   let file_paths: string[] = [];
   for await (
@@ -48,7 +40,7 @@ export async function search_file(denops, filename): Promise<WalkEntry[]> {
   return file_paths;
 }
 
-export async function eval_link(
+async function eval_link(
   denops: Denops,
 ): Promise<{ [key: string]: any }> {
   // [[]]で囲まれたカーソル下の文字列を取得

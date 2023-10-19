@@ -11,29 +11,21 @@ import {
 
 import { getBaseDir, getDailyNoteDir } from "./utils.ts";
 
-// export async function main(denops: Denops): Promise<void> {
-//   denops.dispatcher = {
-//     async createToday(): Promise<void> {
-//       const baseDir: string = await getBaseDir(denops);
-//       const dailyNoteDir: string = await getDailyNoteDir(denops);
-//       const filename: string = genDateStr();
-//       const path2file: string = join(baseDir, dailyNoteDir, filename);
-//       const res: OpenResult = await open(denops, path2file);
-//       if (!await exists(path2file)) {
-//         return;
-//       }
-//       const bufnr: number = res["bufnr"];
-//       const template: string[] = getTemplate(filename, "daily_note");
-//       await setbufline(denops, bufnr, 1, template);
-//     },
-//   };
-//   await execute(
-//     denops,
-//     `command! DpsObsidianToday call denops#request('${denops.name}', 'createToday', [])`,
-//   );
-// }
+export async function createToday(denops: Denops): Promise<void> {
+  const baseDir: string = await getBaseDir(denops);
+  const dailyNoteDir: string = await getDailyNoteDir(denops);
+  const filename: string = genDateStr();
+  const path2file: string = join(baseDir, dailyNoteDir, filename);
+  const res: OpenResult = await open(denops, path2file);
+  if (!await exists(path2file)) {
+    return;
+  }
+  const bufnr: number = res["bufnr"];
+  const template: string[] = getTemplate(filename, "daily_note");
+  await setbufline(denops, bufnr, 1, template);
+}
 
-export function getTemplate(id: string, tag: string): string[] {
+function getTemplate(id: string, tag: string): string[] {
   const monthNames = [
     "January",
     "February",
@@ -67,7 +59,7 @@ function getDate(): Date {
   return d;
 }
 
-export function genDateStr(): string {
+function genDateStr(): string {
   const d = getDate();
   const filename = format(d, "yyyy-MM-dd") + ".md";
   return filename;

@@ -32,34 +32,11 @@ export class Source extends BaseSource<Params> {
     sourceParams: Params;
     completeStr: string;
   }): Promise<Item[]> {
-    let items: Item[] = this.getCompletionFiles(args.denops);
-    if (items.length == 0) {
-      items = this.createNewNote(args);
-    }
+    let items: Item[] = await this.getCompletionFiles(args.denops);
     return items;
   }
   override params(): Params {
     return {};
-  }
-  async createNewNote(args: any): Promise<ObsidianNotes> {
-    const items: Item<ObsidianNotes>[] = [];
-    const target: string = args.context.input;
-    const base_dir: string = await getBaseDir(args.denops);
-    const file_in_vault = await getFileInVault(base_dir);
-    const daily_note_dir = await getDailyNoteDir(args.denops);
-    let filename = genFilename();
-    while (!check(file_in_vault, filename)) {
-      filename = genFilename();
-    }
-    items.push({
-      word: target,
-      user_data: {
-        id: target,
-        filename: filename,
-        noteDir: base_dir + "/" + daily_note_dir,
-      },
-    });
-    return { items: items, isIncomplete: true };
   }
   async getCompletionFiles(denops: Denops): Promise<Item[]> {
     let items: Item[] = [];
@@ -91,91 +68,4 @@ export class Source extends BaseSource<Params> {
     }
     return items;
   }
-  override async onCompleteDone(
-    {
-      denops,
-      userData,
-      context,
-      sourceParams,
-    }: OnCompleteDoneArguments<Params, UserData>,
-  ): Promise<void> {
-    const content = noteTemplate(userData.id, userData.filename);
-    await writefile(
-      denops,
-      content,
-      userData.noteDir + "/" + userData.filename + ".md",
-    );
-    const replace_str = userData.filename + "|" + userData.id;
-    // [[]]で囲まれている文字列を変換する
-    const line = context.lineNr;
-    const bufnr = await winbufnr(denops, 0);
-    const line_under_cursor = await getbufline(denops, bufnr, line);
-    const target = line_under_cursor[0];
-    let replacedString = "[[" + target.replace(
-      /\[\[(.*?)\]\]/g,
-      replace_str,
-    ).replace("[[", "");
-    if (replacedString.indexOf("]]") == -1) {
-      replacedString += "]]";
-    }
-    await denops.call("setline", line, replacedString);
-    return;
-  }
-}
-function noteTemplate(
-  alias: string,
-  filename: string,
-): string[] {
-  const id = filename.replace(".md", "");
-  alias = alias.replace("\[\[", "").replace("\]\]", "");
-  return [
-    "---",
-    `id: \"${id}\"`,
-    "aliases:",
-    `- \"${alias}\"`,
-    "tags:",
-    '- ""',
-    "--- ",
-  ];
-}
-
-function check(
-  files_in_vault: string[],
-  filename: string,
-): boolean {
-  for (const file in files_in_vault) {
-    if (file.includes(filename)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-function genFilename(): string {
-  const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-  let filename = "";
-  while (filename.length < 4) {
-    const n = Math.floor(Math.random() * 100);
-    if (n < 26) {
-      filename += alpha[n];
-    }
-  }
-  filename += "_" + String(Math.floor(Math.random() * 10000));
-  return filename;
-}
-
-async function getFileInVault(
-  base_dir: string,
-): Promise<string[]> {
-  let files = [];
-  for await (
-    const entry of walk(base_dir, {
-      includeDirs: false,
-      includeFiles: true,
-      exts: [".md"],
-    })
-  ) {
-    files.push(entry.path);
-  }
-  return files;
 }

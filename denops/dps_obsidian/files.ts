@@ -17,7 +17,7 @@ export async function createToday(denops: Denops): Promise<void> {
   const filename: string = genDateStr();
   const path2file: string = join(baseDir, dailyNoteDir, filename);
   const res: OpenResult = await open(denops, path2file);
-  if (!await exists(path2file)) {
+  if (await exists(path2file)) {
     return;
   }
   const bufnr: number = res["bufnr"];

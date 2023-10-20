@@ -61,11 +61,44 @@ export class Source extends BaseSource<Params> {
         if (res == null) {
           continue;
         }
-        const res_str = res[0].replace(/"/g, "");
-        const word = filename + "|" + res_str;
-        items.push({ word: word });
+        const res_str = "[[" + res[0].replace(/"/g, "");
+        //TODO: タグをワードに突っ込んで、補完が完了したらファイル名とのペアに変更する
+        items.push({
+          word: res_str,
+          user_data: { id: res_str, filename: filename, noteDir: "" },
+        });
+        items.push({
+          word: filename,
+          user_data: { id: res_str, filename: filename, noteDir: "" },
+        });
       }
     }
+    // console.log(args.context.input);
+    console.log(items);
     return items;
+  }
+  override async onCompleteDone(
+    {
+      denops,
+      userData,
+      context,
+      sourceParams,
+    }: OnCompleteDoneArguments<Params, UserData>,
+  ): Promise<void> {
+    const replace_str = userData.filename + "|" + userData.id;
+    // [[]]で囲まれている文字列を変換する
+    const line = context.lineNr;
+    const bufnr = await winbufnr(denops, 0);
+    const line_under_cursor = await getbufline(denops, bufnr, line);
+    const target = line_under_cursor[0];
+    let replacedString = "[[" + target.replace(
+      /\[\[(.*?)\]\]/g,
+      replace_str,
+    ).replace("[[", "");
+    if (replacedString.indexOf("]]") == -1) {
+      replacedString += "]]";
+    }
+    await denops.call("setline", line, replacedString);
+    return;
   }
 }

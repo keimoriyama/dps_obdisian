@@ -41,13 +41,13 @@ function getTemplate(id: string, tag: string): string[] {
     "December",
   ];
   const d = getDate();
-  const month = monthNames[d.getMonth() - 1];
+  const month = monthNames[d.getMonth()];
   const date_alias = `- ${month} ${d.getDate()}, ${d.getFullYear()}`;
   return [
     "---",
     `id: \"${id}\"`,
     "aliases:",
-    date_alias,
+    `\"${date_alias}\"`,
     "tags:",
     `- \"${tag}\"`,
     "--- ",

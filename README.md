@@ -12,3 +12,8 @@ This plugin is written by denops.
 ### Variables
 
 - `dps_obsidian_base_dir`: directory of the vault
+
+### Current Issues
+
+- Can't support multi link to other notes in a line
+- Formatter is not available

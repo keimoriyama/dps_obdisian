@@ -62,7 +62,6 @@ export class Source extends BaseSource<Params> {
           continue;
         }
         const res_str = "[[" + res[0].replace(/"/g, "");
-        //TODO: タグをワードに突っ込んで、補完が完了したらファイル名とのペアに変更する
         items.push({
           word: res_str,
           user_data: { id: res_str, filename: filename, noteDir: "" },
@@ -74,7 +73,7 @@ export class Source extends BaseSource<Params> {
       }
     }
     // console.log(args.context.input);
-    console.log(items);
+    // console.log(items);
     return items;
   }
   override async onCompleteDone(

@@ -20,7 +20,6 @@ export async function follow_link(denops: Denops) {
     } else {
       filename = file_ailias + ".md";
     }
-    console.log(filename);
     // 絶対パスで指定する
     let file_paths: WalkEntry[] = await search_file(denops, filename);
     if (file_paths.length == 1) {

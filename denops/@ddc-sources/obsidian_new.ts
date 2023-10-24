@@ -13,6 +13,7 @@ import { Denops } from "https://deno.land/x/ddc_vim@v3.4.0/deps.ts";
 import { walk } from "https://deno.land/std@0.92.0/fs/mod.ts";
 import {
   getbufline,
+  getline,
   winbufnr,
   writefile,
 } from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
@@ -37,8 +38,11 @@ export class Source extends BaseSource<Params> {
     completeStr: string;
   }): Promise<DdcGatherItems<ObsidianNotes>> {
     const items: Item<ObsidianNotes>[] = [];
-    const target: string = args.context.input;
-    console.log(target);
+    const input: string = args.context.input;
+    const next_input: string = args.context.nextInput;
+    if (next_input != "]]") {
+      return { items: items, isIncomplete: false };
+    }
     const base_dir: string = await getBaseDir(args.denops);
     const file_in_vault = getFileInVault(base_dir);
     let filename = genFilename();
@@ -46,8 +50,8 @@ export class Source extends BaseSource<Params> {
       filename = genFilename();
     }
     items.push({
-      word: target,
-      user_data: { id: target, filename: filename, noteDir: base_dir },
+      word: input,
+      user_data: { id: input, filename: filename, noteDir: base_dir },
     });
     return { items: items, isIncomplete: true };
   }

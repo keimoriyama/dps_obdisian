@@ -21,7 +21,7 @@ export async function createToday(denops: Denops): Promise<void> {
     return;
   }
   const bufnr: number = res["bufnr"];
-  const template: string[] = getTemplate(filename, "daily_notes");
+  const template: string[] = getTemplate(filename, "daily-notes");
   await setbufline(denops, bufnr, 1, template);
 }
 

@@ -38,7 +38,7 @@ export class Source extends BaseSource<Params> {
     completeStr: string;
   }): Promise<DdcGatherItems<ObsidianNotes>> {
     const items: Item<ObsidianNotes>[] = [];
-    const input: string = args.context.input;
+    const input: string = args.completeStr;
     const next_input: string = args.context.nextInput;
     if (next_input != "]]") {
       return { items: items, isIncomplete: false };
@@ -51,8 +51,13 @@ export class Source extends BaseSource<Params> {
     }
     items.push({
       word: input,
-      user_data: { id: input, filename: filename, noteDir: base_dir },
+      user_data: {
+        id: input.replace("[[", "").replace("]]", ""),
+        filename: filename,
+        noteDir: base_dir,
+      },
     });
+    console.log(items);
     return { items: items, isIncomplete: true };
   }
   override params(): Params {

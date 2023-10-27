@@ -42,12 +42,12 @@ function getTemplate(id: string, tag: string): string[] {
   ];
   const d = getDate();
   const month = monthNames[d.getMonth()];
-  const date_alias = `- ${month} ${d.getDate()}, ${d.getFullYear()}`;
+  const date_alias = `${month} ${d.getDate()}, ${d.getFullYear()}`;
   return [
     "---",
     `id: \"${id}\"`,
     "aliases:",
-    `\"${date_alias}\"`,
+    `- \"${date_alias}\"`,
     "tags:",
     `- \"${tag}\"`,
     "--- ",

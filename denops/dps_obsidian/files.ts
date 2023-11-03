@@ -1,6 +1,5 @@
 import {
   Denops,
-  execute,
   exists,
   format,
   join,

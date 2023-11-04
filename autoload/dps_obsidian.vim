@@ -3,5 +3,5 @@ function dps_obsidian#create_today() abort
 endfunction
 
 function dps_obsidian#follow_link() abort
-	call denops#request('${denops.name}', 'follow_link', [])
+	call denops#request('dps_obsidian', 'follow_link', [])
 endfunction

@@ -3,26 +3,20 @@ import {
   DdcOptions,
   Item,
   SourceOptions,
-} from "https://deno.land/x/ddc_vim@v3.4.0/types.ts";
-import { Denops } from "https://deno.land/x/ddc_vim@v3.4.0/deps.ts";
+} from "https://deno.land/x/ddc_vim@v4.0.5/types.ts";
+import { Denops } from "https://deno.land/x/ddc_vim@v4.0.5/deps.ts";
 import { walk } from "https://deno.land/std@0.92.0/fs/mod.ts";
 import { readfile } from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
-import { getBaseDir, getDailyNoteDir } from "../dps_obsidian/utils.ts";
+import { getBaseDir } from "../dps_obsidian/utils.ts";
 
 import {
   getbufline,
   winbufnr,
-  writefile,
 } from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
 
 import { type OnCompleteDoneArguments } from "https://deno.land/x/ddc_vim@v4.0.5/base/source.ts";
 
 type Params = Record<never, never>;
-type ObsidianNotes = {
-  id: string;
-  filename: string;
-  noteDir: string;
-};
 
 export class Source extends BaseSource<Params> {
   override async gather(args: {
@@ -38,6 +32,7 @@ export class Source extends BaseSource<Params> {
   override params(): Params {
     return {};
   }
+  // onInitの方が良さそう
   async getCompletionFiles(denops: Denops): Promise<Item[]> {
     let items: Item[] = [];
     const base_dir: string = await getBaseDir(denops);
@@ -72,8 +67,6 @@ export class Source extends BaseSource<Params> {
         });
       }
     }
-    // console.log(args.context.input);
-    // console.log(items);
     return items;
   }
   override async onCompleteDone(

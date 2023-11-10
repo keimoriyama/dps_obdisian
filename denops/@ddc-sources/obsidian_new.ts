@@ -3,17 +3,14 @@ import {
   Context,
   DdcGatherItems,
   DdcOptions,
-  DdcUserData,
   Item,
-  OnCallback,
   SourceOptions,
   UserData,
-} from "https://deno.land/x/ddc_vim@v3.4.0/types.ts";
-import { Denops } from "https://deno.land/x/ddc_vim@v3.4.0/deps.ts";
+} from "https://deno.land/x/ddc_vim@v4.0.5/types.ts";
+import { Denops } from "https://deno.land/x/ddc_vim@v4.0.5/deps.ts";
 import { walk } from "https://deno.land/std@0.92.0/fs/mod.ts";
 import {
   getbufline,
-  getline,
   winbufnr,
   writefile,
 } from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
@@ -40,6 +37,7 @@ export class Source extends BaseSource<Params> {
     const items: Item<ObsidianNotes>[] = [];
     const input: string = args.completeStr;
     const next_input: string = args.context.nextInput;
+
     if (next_input != "]]") {
       return { items: items, isIncomplete: false };
     }

@@ -1,6 +1,5 @@
 import {
   Denops,
-  execute,
   getcurpos,
   getline,
   open,
@@ -28,11 +27,18 @@ export async function follow_link(denops: Denops) {
   }
 }
 
-async function search_file(denops, filename): Promise<WalkEntry[]> {
+async function search_file(
+  denops: Denops,
+  filename: string,
+): Promise<WalkEntry[]> {
   const baseDir: string = await getBaseDir(denops);
-  let file_paths: string[] = [];
+  const file_paths: WalkEntry[] = [];
+  const fileRegExp = new RegExp(filename);
   for await (
-    const files of walk(baseDir, { includeDirs: false, match: [filename] })
+    const files of walk(baseDir, {
+      includeDirs: false,
+      match: [fileRegExp],
+    })
   ) {
     file_paths.push(files);
   }

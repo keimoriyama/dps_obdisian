@@ -1,6 +1,4 @@
-import {
-  Denops,
-} from "./deps.ts";
+import { Denops } from "./deps.ts";
 import { follow_link } from "./links.ts";
 import { createToday } from "./files.ts";
 

@@ -9,7 +9,6 @@ import {
   OpenResult,
   setbufline,
 } from "./deps.ts";
-// import { is } from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
 import { getBaseDir, getDailyNoteDir } from "./utils.ts";
 
 export async function createToday(denops: Denops): Promise<void> {

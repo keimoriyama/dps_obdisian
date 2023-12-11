@@ -1,8 +1,12 @@
-import { Denops, expand, globals, isNull, isString } from "./deps.ts";
+import { Denops, ensure, expand, globals, is, isNull } from "./deps.ts";
+
 export async function getBaseDir(denops: Denops): Promise<string> {
-  const baseDir: string = await expand(
-    denops,
-    await globals.get(denops, "dps_obsidian_base_dir"),
+  const baseDir: string = ensure(
+    await expand(
+      denops,
+      await globals.get(denops, "dps_obsidian_base_dir"),
+    ),
+    is.String,
   );
   if (isNull(baseDir)) {
     console.log("dps_obsidian_base_dir is empty");

@@ -8,6 +8,7 @@ export { globals } from "https://deno.land/x/denops_std@v5.0.1/variable/mod.ts";
 export { join } from "https://deno.land/std@0.203.0/path/mod.ts";
 export { DAY, format } from "https://deno.land/std@0.203.0/datetime/mod.ts";
 export {
+  getbufline,
   getcurpos,
   getline,
   setbufline,
@@ -25,3 +26,4 @@ export {
   isNull,
   isString,
 } from "https://deno.land/x/unknownutil@v3.10.0/mod.ts";
+export { assertEquals } from "https://deno.land/std@0.208.0/assert/mod.ts";

@@ -1,13 +1,4 @@
 import { BaseSource } from "https://deno.land/x/ddc_vim@v4.0.5/types.ts";
-// import { Denops } from "https://deno.land/x/ddc_vim@v4.0.5/deps.ts";
-// import { walk } from "https://deno.land/std@0.92.0/fs/mod.ts";
-// import {
-//   getbufline,
-//   winbufnr,
-//   writefile,
-// } from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
-// import { getBaseDir, getDailyNoteDir } from "../dps_obsidian/utils.ts";
-// import { assertEquals } from "https://deno.land/std@0.208.0/assert/mod.ts";
 
 import {
   assertEquals,
@@ -113,7 +104,7 @@ function NoteTemplate(
     "aliases:",
     `- \"${alias}\"`,
     "tags:",
-    '- ""',
+    "[]",
     "--- ",
   ];
 }

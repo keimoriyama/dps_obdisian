@@ -1,25 +1,29 @@
+import { BaseSource } from "https://deno.land/x/ddc_vim@v4.0.5/types.ts";
+// import { Denops } from "https://deno.land/x/ddc_vim@v4.0.5/deps.ts";
+// import { walk } from "https://deno.land/std@0.92.0/fs/mod.ts";
+// import {
+//   getbufline,
+//   winbufnr,
+//   writefile,
+// } from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
+// import { getBaseDir, getDailyNoteDir } from "../dps_obsidian/utils.ts";
+// import { assertEquals } from "https://deno.land/std@0.208.0/assert/mod.ts";
+
 import {
-  BaseSource,
+  assertEquals,
   Context,
   DdcGatherItems,
   DdcOptions,
-  DdcUserData,
+  Denops,
+  getBaseDir,
+  getbufline,
+  getDailyNoteDir,
   Item,
   SourceOptions,
-} from "https://deno.land/x/ddc_vim@v4.0.5/types.ts";
-import { Denops } from "https://deno.land/x/ddc_vim@v4.0.5/deps.ts";
-import { walk } from "https://deno.land/std@0.92.0/fs/mod.ts";
-import {
-  getbufline,
+  walk,
   winbufnr,
   writefile,
-} from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
-import { getBaseDir, getDailyNoteDir } from "../dps_obsidian/utils.ts";
-import {
-  assertEquals,
-  equal,
-} from "https://deno.land/std@0.208.0/assert/mod.ts";
-import { type OnCompleteDoneArguments } from "https://deno.land/x/ddc_vim@v4.0.5/base/source.ts";
+} from "./deps.ts";
 
 type Params = Record<never, never>;
 

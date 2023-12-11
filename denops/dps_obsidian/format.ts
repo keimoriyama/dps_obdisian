@@ -1,8 +1,9 @@
 import { assertEquals, Denops, getbufline, setbufline } from "./deps.ts";
+
 export async function format(denops: Denops): Promise<void> {
-  const lines = await getbufline(denops, "%", "$");
+  const lines = await getbufline(denops, "%", 1, "$");
   const formattedLines = formatLine(lines);
-  await setbufline(denops, "%", 0, formattedLines);
+  await setbufline(denops, "%", 1, formattedLines);
 }
 
 function formatLine(lines: string[]): string[] {

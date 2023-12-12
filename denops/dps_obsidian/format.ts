@@ -27,7 +27,7 @@ function formatLine(lines: string[]): string[] {
       } else {
         result.push(line); // No square brackets found, keep the line unchanged
       }
-    } else if (line.startsWith("#")) {
+    } else if (line.startsWith("# ")) {
       result.splice(
         alias_idx,
         0,
@@ -107,9 +107,37 @@ Deno.test("format_with_alias", async () => {
     "aliases:",
     '- "2021-03-01"',
     "tags:",
+    '["test1", "test2"]',
+    "",
+    "# This is test",
+  ];
+  const res = formatLine(target);
+  assertEquals(res, [
+    "---",
+    "id:",
+    "- 2021-03-01",
+    "aliases:",
+    '- "2021-03-01"',
+    '- "This is test"',
+    "tags:",
+    '- "test1"',
+    '- "test2"',
+    "",
+    "# This is test",
+  ]);
+});
+
+Deno.test("format_with_alias", async () => {
+  const target = [
+    "---",
+    'id: "2021-03-01"',
+    "aliases:",
+    '- "2021-03-01"',
+    "tags:",
     "[]",
     "",
     "# This is test",
+    "## This is test",
   ];
   const res = formatLine(target);
   assertEquals(res, [
@@ -123,5 +151,6 @@ Deno.test("format_with_alias", async () => {
     "[]",
     "",
     "# This is test",
+    "## This is test",
   ]);
 });

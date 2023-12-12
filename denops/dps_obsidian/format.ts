@@ -85,7 +85,6 @@ Deno.test("format_with_alias", async () => {
     "# This is test",
   ];
   const res = formatLine(target);
-  console.log(res);
   assertEquals(res, [
     "---",
     "id:",
@@ -113,7 +112,6 @@ Deno.test("format_with_alias", async () => {
     "# This is test",
   ];
   const res = formatLine(target);
-  console.log(res);
   assertEquals(res, [
     "---",
     "id:",

@@ -54,7 +54,6 @@ export class Source extends BaseSource<Params> {
         noteDir: base_dir,
       },
     });
-    console.log(items);
     return { items: items, isIncomplete: true };
   }
   override params(): Params {
@@ -89,7 +88,7 @@ export class Source extends BaseSource<Params> {
 
 function formatString(str: string, filename: string, id: string): string {
   const regex = new RegExp(`\\[\\[${id}\\]\\]`, "g");
-  return str.replace(regex, `[[${id}|${filename}]]`);
+  return str.replace(regex, `[[${filename}|${id}]]`);
 }
 
 function NoteTemplate(
@@ -153,9 +152,9 @@ async function getFileInVault(
 Deno.test("formatString", () => {
   assertEquals(
     formatString("[[sample]]aaa[[test]]", "aaa", "test"),
-    "[[sample]]aaa[[test|aaa]]",
+    "[[sample]]aaa[[aaa|test]]",
   );
-  assertEquals(formatString("[[test]]", "sample", "test"), "[[test|sample]]");
-  assertEquals(formatString("[[test]]test", "aaa", "test"), "[[test|aaa]]test");
-  assertEquals(formatString("test[[test]]", "aaa", "test"), "test[[test|aaa]]");
+  assertEquals(formatString("[[test]]", "sample", "test"), "[[sample|test]]");
+  assertEquals(formatString("[[test]]test", "aaa", "test"), "[[aaa|test]]test");
+  assertEquals(formatString("test[[test]]", "aaa", "test"), "test[[aaa|test]]");
 });

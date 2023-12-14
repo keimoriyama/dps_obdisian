@@ -13,8 +13,8 @@ function formatLine(lines: string[]): string[] {
   for (const line of lines) {
     if (line.startsWith("id:")) {
       const [, value] = line.match(/"([^"]+)"/) || [];
-      result.push("id:");
       if (value) {
+        result.push("id:");
         result.push("- " + value);
       } else {
         result.push(line); // No double quotes found, keep the line unchanged
@@ -47,7 +47,7 @@ function formatLine(lines: string[]): string[] {
       result.push(line);
     }
   }
-
+  console.log(result);
   return result;
 }
 

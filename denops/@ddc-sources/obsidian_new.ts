@@ -1,7 +1,6 @@
-import { BaseSource } from "https://deno.land/x/ddc_vim@v4.0.5/types.ts";
-
 import {
   assertEquals,
+  BaseSource,
   Context,
   DdcGatherItems,
   DdcOptions,
@@ -36,10 +35,10 @@ export class Source extends BaseSource<Params> {
     const items: Item<ObsidianNotes>[] = [];
     const input: string = args.completeStr;
     const next_input: string = args.context.nextInput;
-
-    if (next_input != "]]") {
-      return { items: items, isIncomplete: false };
-    }
+    // console.log(input);
+    // if (next_input != "]]") {
+    //   return { items: items, isIncomplete: false };
+    // }
     const base_dir: string = await getBaseDir(args.denops);
     const file_in_vault = await getFileInVault(base_dir);
     let filename = genFilename();

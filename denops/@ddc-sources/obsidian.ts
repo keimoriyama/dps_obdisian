@@ -1,16 +1,13 @@
-// import { walk } from "https://deno.land/std@0.92.0/fs/mod.ts";
 import { readfile } from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
-// import { getBaseDir } from "../dps_obsidian/utils.ts";
-import { BaseSource } from "https://deno.land/x/ddc_vim@v4.0.5/types.ts";
 import {
   ensure,
   is,
   isArrayOf,
 } from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
 import {
+  BaseSource,
   Context,
   DdcOptions,
-  DdcUserData,
   Denops,
   getBaseDir,
   getbufline,

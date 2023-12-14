@@ -61,7 +61,7 @@ export class Source extends BaseSource<Params> {
         if (res == null) {
           continue;
         }
-        const res_str = "[[" + res[0].replace(/"/g, "");
+        const res_str = res[0].replace(/"/g, "");
         items.push({
           word: res_str,
           user_data: { id: res_str, filename: filename, noteDir: "" },

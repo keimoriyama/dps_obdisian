@@ -34,11 +34,6 @@ export class Source extends BaseSource<Params> {
   }): Promise<DdcGatherItems<ObsidianNotes>> {
     const items: Item<ObsidianNotes>[] = [];
     const input: string = args.completeStr;
-    const next_input: string = args.context.nextInput;
-    // console.log(input);
-    // if (next_input != "]]") {
-    //   return { items: items, isIncomplete: false };
-    // }
     const base_dir: string = await getBaseDir(args.denops);
     const file_in_vault = await getFileInVault(base_dir);
     let filename = genFilename();
@@ -48,7 +43,7 @@ export class Source extends BaseSource<Params> {
     items.push({
       word: input,
       user_data: {
-        id: input.replace("[[", "").replace("]]", ""),
+        id: input.replace("]]", ""),
         filename: filename,
         noteDir: base_dir,
       },

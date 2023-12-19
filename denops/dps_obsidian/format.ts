@@ -15,10 +15,10 @@ function formatLine(lines: string[]): string[] {
       const [, value] = line.match(/"([^"]+)"/) || [];
       if (value) {
         result.push("id:");
-        result.push("\t- " + value);
+        result.push("  - " + value);
       } else {
-        if (!line.startsWith("\t")) {
-          result.push("\t" + line);
+        if (!line.startsWith("  ")) {
+          result.push("  " + line);
         } else {
           result.push(line); // No double quotes found, keep the line unchanged
         }
@@ -27,7 +27,7 @@ function formatLine(lines: string[]): string[] {
       // expand tags
       const [, tags] = line.match(/\[([^\]]+)\]/) || [];
       if (tags) {
-        const parsedTags = tags.split(",").map((tag) => `\t- ${tag.trim()}`);
+        const parsedTags = tags.split(",").map((tag) => `  - ${tag.trim()}`);
         result.push(...parsedTags);
       } else {
         result.push(line); // No square brackets found, keep the line unchanged
@@ -37,7 +37,7 @@ function formatLine(lines: string[]): string[] {
       result.splice(
         alias_idx + 1,
         0,
-        '\t- "' + line.replace("#", "").trim() + '"',
+        '  - "' + line.replace("#", "").trim() + '"',
       );
       result.push(line);
     } else if (line.startsWith("aliases:")) {
@@ -52,7 +52,7 @@ function formatLine(lines: string[]): string[] {
         alias_idx += 1;
       }
       if (line.startsWith("- ")) {
-        result.push("\t" + line);
+        result.push("  " + line);
       } else {
         result.push(line);
       }
@@ -66,7 +66,7 @@ Deno.test("format", async () => {
     "---",
     'id: "2021-03-01"',
     "aliases:",
-    '\t- "2021-03-01"',
+    '  - "2021-03-01"',
     "tags:",
     '["test1", "test2"]',
   ];
@@ -74,12 +74,12 @@ Deno.test("format", async () => {
   assertEquals(res, [
     "---",
     "id:",
-    "\t- 2021-03-01",
+    "  - 2021-03-01",
     "aliases:",
-    '\t- "2021-03-01"',
+    '  - "2021-03-01"',
     "tags:",
-    '\t- "test1"',
-    '\t- "test2"',
+    '  - "test1"',
+    '  - "test2"',
   ]);
 });
 Deno.test("format", async () => {
@@ -95,12 +95,12 @@ Deno.test("format", async () => {
   assertEquals(res, [
     "---",
     "id:",
-    "\t- 2021-03-01",
+    "  - 2021-03-01",
     "aliases:",
-    '\t- "2021-03-01"',
+    '  - "2021-03-01"',
     "tags:",
-    '\t- "test1"',
-    '\t- "test2"',
+    '  - "test1"',
+    '  - "test2"',
   ]);
 });
 
@@ -119,13 +119,13 @@ Deno.test("format_with_alias", async () => {
   assertEquals(res, [
     "---",
     "id:",
-    "\t- 2021-03-01",
+    "  - 2021-03-01",
     "aliases:",
-    '\t- "2021-03-01"',
-    '\t- "This is test"',
+    '  - "2021-03-01"',
+    '  - "This is test"',
     "tags:",
-    '\t- "test1"',
-    '\t- "test2"',
+    '  - "test1"',
+    '  - "test2"',
     "",
     "# This is test",
   ]);
@@ -146,13 +146,13 @@ Deno.test("format_with_alias", async () => {
   assertEquals(res, [
     "---",
     "id:",
-    "\t- 2021-03-01",
+    "  - 2021-03-01",
     "aliases:",
-    '\t- "2021-03-01"',
-    '\t- "This is test"',
+    '  - "2021-03-01"',
+    '  - "This is test"',
     "tags:",
-    '\t- "test1"',
-    '\t- "test2"',
+    '  - "test1"',
+    '  - "test2"',
     "",
     "# This is test",
   ]);
@@ -174,10 +174,10 @@ Deno.test("format_with_alias", async () => {
   assertEquals(res, [
     "---",
     "id:",
-    "\t- 2021-03-01",
+    "  - 2021-03-01",
     "aliases:",
-    '\t- "2021-03-01"',
-    '\t- "This is test"',
+    '  - "2021-03-01"',
+    '  - "This is test"',
     "tags:",
     "[]",
     "",

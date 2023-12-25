@@ -9,12 +9,14 @@ export async function format(denops: Denops): Promise<void> {
 function formatLine(lines: string[]): string[] {
   const result: string[] = [];
   let in_tags: boolean = false;
+  let header: number[] = [];
   // 機能の分割が必要
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     if (line.startsWith("---")) {
       result.push(line);
       in_tags = !in_tags;
+      header.push(i);
     } else if (line.startsWith("id:")) {
       const [, value] = line.match(/: (.*)/) || [];
       if (value) {
@@ -36,12 +38,33 @@ function formatLine(lines: string[]): string[] {
       result.push(line);
     }
   }
-  for (let i = 0; i < result.length; i++) {
+  for (let i = 0; i <= header[1]; i++) {
     if (result[i].startsWith("---")) {
       in_tags = !in_tags;
     }
     if (result[i].startsWith("- ") && in_tags) {
       result[i] = "  " + result[i];
+    }
+  }
+  let is_alias = false;
+  let last_alias = -1;
+  let insertedString: string[] = [];
+  for (let i = 0; i < result.length; i++) {
+    const line = result[i];
+    const target = '  - "' + line.replace("# ", "") + '"';
+    if (line.startsWith("aliases:")) {
+      is_alias = true;
+    } else if (line.startsWith("tags:")) {
+      is_alias = false;
+    } else if (is_alias) {
+      last_alias = i;
+      insertedString.push(line);
+    } else if (
+      line.startsWith("# ") && last_alias != -1 &&
+      !insertedString.includes(target)
+    ) {
+      result.splice(last_alias + 1, 0, target);
+      insertedString.push(target);
     }
   }
   return result;

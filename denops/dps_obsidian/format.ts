@@ -25,7 +25,7 @@ function formatLine(lines: string[]): string[] {
       } else {
         result.push(line); // No double quotes found, keep the line unchanged
       }
-    } else if (line.indexOf("[") != -1 && line.indexOf("]") != -1) {
+    } else if (in_tags && line.indexOf("[") != -1 && line.indexOf("]") != -1) {
       // expand tags
       const [, tags] = line.match(/\[([^\]]+)\]/) || [];
       if (tags) {
@@ -49,6 +49,7 @@ function formatLine(lines: string[]): string[] {
   let is_alias = false;
   let last_alias = -1;
   let insertedString: string[] = [];
+  // First content should be in alias
   for (let i = 0; i < result.length; i++) {
     const line = result[i];
     const target = '  - "' + line.replace("# ", "") + '"';
@@ -295,5 +296,38 @@ Deno.test("format_with_alias", async () => {
     "",
     "# This is test",
     "- This is test",
+  ]);
+});
+Deno.test("format_with_alias", async () => {
+  const target = [
+    "---",
+    "id:",
+    '  - "2021-03-01"',
+    "aliases:",
+    '  - "2021-03-01"',
+    '  - "This is test"',
+    "tags:",
+    "[]",
+    "---",
+    "",
+    "# This is test",
+    "- This is test",
+    "[[aaaaaa]]",
+  ];
+  const res = formatLine(target);
+  assertEquals(res, [
+    "---",
+    "id:",
+    '  - "2021-03-01"',
+    "aliases:",
+    '  - "2021-03-01"',
+    '  - "This is test"',
+    "tags:",
+    "[]",
+    "---",
+    "",
+    "# This is test",
+    "- This is test",
+    "[[aaaaaa]]",
   ]);
 });

@@ -73,7 +73,7 @@ export class Source extends BaseSource<Params> {
     const line = args.context.lineNr;
     const bufnr = await winbufnr(args.denops, 0);
     const line_under_cursor = await getbufline(args.denops, bufnr, line);
-    const target = line_under_cursor[0];
+    let target = line_under_cursor[0];
     const replacedString = formatString(target, userData.filename, userData.id);
     await args.denops.call("setline", line, replacedString);
     return;
@@ -81,7 +81,14 @@ export class Source extends BaseSource<Params> {
 }
 
 function formatString(str: string, filename: string, id: string): string {
-  const regex = new RegExp(`\\[\\[${id}\\]\\]`, "g");
+  let regex = new RegExp();
+  if (!str.includes(`[[${id}`)) {
+    const tmp_id = id.replace("[[", "");
+    regex = new RegExp(`\\[\\[${tmp_id}\\]\\]`, "g");
+    id = tmp_id;
+  } else {
+    regex = new RegExp(`\\[\\[${id}\\]\\]`, "g");
+  }
   return str.replace(regex, `[[${filename}|${id}]]`);
 }
 

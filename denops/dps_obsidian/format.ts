@@ -61,7 +61,8 @@ function formatLine(lines: string[]): string[] {
       last_alias = i;
       insertedString.push(line);
     } else if (
-      line.startsWith("# ") && last_alias != -1 &&
+      line.startsWith("# ") &&
+      last_alias != -1 &&
       !insertedString.includes(target)
     ) {
       result.splice(last_alias + 1, 0, target);
